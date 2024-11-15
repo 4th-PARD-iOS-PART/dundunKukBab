@@ -36,21 +36,43 @@ class StudentPostModalController: UIViewController {
         let titleTextField: UITextField = {
             let textField = UITextField()
             textField.translatesAutoresizingMaskIntoConstraints = false
-            textField.placeholder = "제목을 입력하세요" // 플레이스홀더 텍스트
+            textField.placeholder = "제목쓰기" // 플레이스홀더 텍스트
             textField.font = UIFont.boldSystemFont(ofSize: 24) // 굵은 폰트로 크기 설정
             textField.textAlignment = .center // 텍스트 가운데 정렬
             textField.borderStyle = .roundedRect // 둥근 사각형 테두리
             return textField
         }()
         
-        // 내용 텍스트 필드 추가
-        let textField: UITextField = {
-            let textField = UITextField()
-            textField.translatesAutoresizingMaskIntoConstraints = false
-            textField.placeholder = "내용을 입력하세요" // 플레이스홀더 텍스트
-            textField.borderStyle = .roundedRect // 둥근 사각형 테두리
-            textField.font = UIFont.systemFont(ofSize: 16) // 폰트 크기 설정
-            return textField
+//        // 내용 텍스트 필드 추가
+//        let textField: UITextField = {
+//            let textField = UITextField()
+//            textField.translatesAutoresizingMaskIntoConstraints = false
+//            textField.placeholder = "내용을 입력하세요" // 플레이스홀더 텍스트
+//            textField.borderStyle = .roundedRect // 둥근 사각형 테두리
+//            textField.font = UIFont.systemFont(ofSize: 16) // 폰트 크기 설정
+//            return textField
+//        }()
+        
+        let button: UIButton = {
+            let button = UIButton()
+            button.setTitle("보내기", for: .normal)  // 버튼 텍스트 설정
+            button.backgroundColor = UIColor(red: 255/255.0, green: 131/255.0, blue: 15/255.0, alpha: 1.0)  // 배경 색상 설정
+            button.setTitleColor(.white, for: .normal)  // 버튼 텍스트 색상을 흰색으로 설정
+            button.translatesAutoresizingMaskIntoConstraints = false  // Auto Layout을 사용할 수 있도록 설정
+            button.titleLabel?.font = UIFont(name: "Pretendard-Black", size: 17)
+            
+            // 모서리를 둥글게 설정
+            button.layer.cornerRadius = 30.0  // 버튼 모서리 둥글기 반경을 30으로 설정
+      
+            // 그림자 효과 추가 (box-shadow)
+                button.layer.shadowColor = UIColor.black.cgColor  // 그림자 색상 설정
+                button.layer.shadowOpacity = 0.25  // 그림자 투명도 설정
+                button.layer.shadowOffset = CGSize(width: 0, height: 2)  // 그림자의 오프셋(수평, 수직)
+                button.layer.shadowRadius = 5.0  // 그림자의 반경 설정
+            
+             button.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
+            
+            return button
         }()
         
         // 콘텐츠 뷰에 모달 뷰를 추가
@@ -59,7 +81,8 @@ class StudentPostModalController: UIViewController {
         
         // 모달 뷰 안에 제목 텍스트 필드와 내용 텍스트 필드를 추가
         modal.addSubview(titleTextField)
-        modal.addSubview(textField)
+//        modal.addSubview(textField)
+        modal.addSubview(button)
         
         // Auto Layout 제약 조건 설정
         NSLayoutConstraint.activate([
@@ -81,11 +104,17 @@ class StudentPostModalController: UIViewController {
             titleTextField.trailingAnchor.constraint(equalTo: modal.trailingAnchor, constant: -20),
             titleTextField.heightAnchor.constraint(equalToConstant: 40), // 제목의 높이 고정
             
-            // 내용 텍스트 필드의 제약조건 설정
-            textField.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 10),
-            textField.leadingAnchor.constraint(equalTo: modal.leadingAnchor, constant: 20),
-            textField.trailingAnchor.constraint(equalTo: modal.trailingAnchor, constant: -20),
-            textField.heightAnchor.constraint(equalToConstant: 40) // 텍스트 필드의 높이 고정
+//            button.topAnchor.constraint(equalTo: modal.topAnchor, constant: 641),
+            button.leadingAnchor.constraint(equalTo: modal.leadingAnchor, constant: 108),
+            button.trailingAnchor.constraint(equalTo: modal.trailingAnchor, constant: -94),
+            button.bottomAnchor.constraint(equalTo: modal.bottomAnchor, constant: -43),
+            button.heightAnchor.constraint(equalToConstant: 56),
+            
         ])
+    }
+    
+    @objc func buttonClicked(){
+
+        print("버튼 확인222")
     }
 }
