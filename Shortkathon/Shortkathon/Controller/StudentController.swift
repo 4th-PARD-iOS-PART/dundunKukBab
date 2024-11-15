@@ -6,13 +6,14 @@ class StudentController: UIViewController {
     
     let tableViewUI: UITableView = {
         let tableVIew = UITableView()
-        tableVIew.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+        tableVIew.backgroundColor = UIColor.clear
         tableVIew.translatesAutoresizingMaskIntoConstraints = false
         return tableVIew
     }()
     
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 255/255.0, green: 131/255.0, blue: 15/255.0, alpha: 1.0)
+        
         super.viewDidLoad()
         
         tableViewUI.dataSource = self
@@ -23,62 +24,63 @@ class StudentController: UIViewController {
     
     func setUI(){
         
-        let contentView: UIView = {
-            let contents = UIView()
-            contents.translatesAutoresizingMaskIntoConstraints = false
-            return contents
-        }()
-        
-        let button : UIButton = {
-            let button = UIButton()
-            button.setTitle("화면전환 ", for: .normal)
-            button.backgroundColor = .black
-            button.setTitleColor(.white, for: .normal)
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
-            return button
-        }()
-        
         view.addSubview(tableViewUI)
-        view.addSubview(button)
         
         tableViewUI.register(StudentTableCell.self, forCellReuseIdentifier: "studentTableCell")
         
+        // 라벨과 버튼을 추가
+        let label: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "보낸 메시지함"
+            label.font = UIFont(name: "Pretendard-Bold", size: 30)
+            label.textColor = .white
+            return label
+        }()
+        
+        let closeButton: UIButton = {
+            let button = UIButton()
+            button.translatesAutoresizingMaskIntoConstraints = false
+            // 이미지 설정
+            if let image = UIImage(named: "Vector") {
+                button.setImage(image, for: .normal)
+            }
+            
+            button.backgroundColor = UIColor.clear // 배경을 투명으로 설정
+            //             button.layer.cornerRadius = 10
+            button.addTarget(self, action: #selector(closeModal), for: .touchUpInside)
+            
+            // 이미지의 위치와 크기를 적절히 설정
+            button.imageView?.contentMode = .scaleAspectFit // 이미지 비율을 맞추어 보기 좋게 표시
+            
+            return button
+        }()
+        
+        view.addSubview(label)
+        view.addSubview(closeButton)
+        
         NSLayoutConstraint.activate([
             
-            tableViewUI.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableViewUI.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableViewUI.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            tableViewUI.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableViewUI.topAnchor.constraint(equalTo: view.topAnchor, constant: 185),
+            tableViewUI.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,constant: 36),
+            tableViewUI.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,constant: -36),
+            tableViewUI.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -94),
             
-//             Button 제약 조건: 화면 중앙에 배치
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            button.widthAnchor.constraint(equalToConstant: 150),
-            button.heightAnchor.constraint(equalToConstant: 50)
+            label.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
+            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 36),
+            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -136),
             
-            
+            closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 52),
+            closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 23),
+            closeButton.widthAnchor.constraint(equalToConstant: 16),
+            closeButton.heightAnchor.constraint(equalToConstant: 29)
             
         ])
         
     }
     
-    
-    @objc func buttonClicked(){
-        let vc = StudentModalController()
-        vc.modalTransitionStyle = .coverVertical // 아래에서 위로 (기존)
-        vc.modalPresentationStyle = .automatic // 자동으로
-        
-//        vc.modalPresentationStyle = .fullScreen
-        
-        
-        vc.modalPresentationStyle = .pageSheet //화면의 가운데에 배치되는 페이지 시트 (iPad나 가로 모드에서 주로 사용)
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.medium()] // 중간 및 큰 높이 조절 포인트 지정
-            sheet.prefersGrabberVisible = true    // 상단에 잡기 표시줄 추가
-        }
-        
-        self.present(vc,animated: true)
+    @objc func closeModal() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     
@@ -97,6 +99,13 @@ extension StudentController: UITableViewDelegate, UITableViewDataSource {
         
         let data = MockData.modeling[indexPath.row]
         cell.title.text = data.title
+        cell.name.text = data.name
+        
+        cell.backgroundColor = .clear
+        
+        let selectedBackgroundView = UIView()
+        selectedBackgroundView.backgroundColor = .clear  // 배경을 투명으로 설정
+        cell.selectedBackgroundView = selectedBackgroundView
         return cell
     }
     
@@ -105,34 +114,25 @@ extension StudentController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100.0
+        return 92
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 70.0
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView()
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        headerView.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+    // 셀 선택 시 배경 색을 설정
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let selectedCell = tableView.cellForRow(at: indexPath) as? StudentTableCell {
+            selectedCell.bg.backgroundColor = UIColor.clear // 선택된 셀 배경 색
+        }
+    }
     
-        let headerTitle = UILabel()
-        headerTitle.translatesAutoresizingMaskIntoConstraints = false
-        headerTitle.text = "Section \(section)"
-        headerTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        headerTitle.textColor = .white
-    
-        headerView.addSubview(headerTitle)
-    
-        NSLayoutConstraint.activate([
-            headerTitle.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 0),
-            headerTitle.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 8),
-            headerTitle.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -8),
-            headerTitle.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0)
-        ])
-    
-        return headerView
+    // 셀 선택 해제 시 원래 배경 색으로 되돌리기
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if let deselectedCell = tableView.cellForRow(at: indexPath) as? StudentTableCell {
+            deselectedCell.bg.backgroundColor = UIColor.clear  // 기본 배경 색
+        }
     }
 }
 

@@ -7,13 +7,13 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
     let pageSize = 2
     
     let pageTexts: [String] = [
-         "메시지 전송",
-         "보낸 메시지"
+         "고민글",
+         "고민함"
      ]
     
     let subpageText: [String] = [
-         "학교 폭력으로 어려워하는 친구를 도와주세요!",
-         "보낸 음성 메시지를 확인할 수 있어요!"
+         "학교 폭력을 겪거나 목격한 일을 익명으로 작성할 수 있습니다. 당신의 목소리가 문제를 해결하는 첫걸음이 됩니다.",
+         "작성한 고민글이 모이는 공간입니다. 익명성을 보장하며, 선생님께만 전달되어 안전하게 처리됩니다."
      ]
     
     let buttonPage: [String] = [
@@ -24,6 +24,11 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
     let imgaeTextpage: [String] = [
          "studentSwipe1",
          "studentList"
+     ]
+    
+    let positionPage: [String] = [
+         "post",
+         "list"
      ]
     
     lazy var pageControl: UIPageControl = {
@@ -93,7 +98,7 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
     let boldlabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "첫 번째 페이지"
+        label.text = "고민글"
         label.textColor = .black
         label.font = UIFont(name: "Pretendard-Bold", size: 30)
         return label
@@ -102,11 +107,19 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
     let sublabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "여기가 어떤 곳인지 설명해주는 글자글자글자 글자 "
+        label.text = "학교 폭력을 겪거나 목격한 일을 익명으로 작성할 수 있습니다. 당신의 목소리가 문제를 해결하는 첫걸음이 됩니다."
         label.textColor = .black
         label.numberOfLines = 0
-        label.font = UIFont(name: "Pretendard-Regular", size: 17)
+        label.font = UIFont(name: "Pretendard-Regular", size: 15)
         return label
+    }()
+    
+    let check: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "post")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
     }()
 
     override func viewDidLoad() {
@@ -160,6 +173,7 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
         
         self.view.addSubview(boldlabel)
         self.view.addSubview(sublabel)
+        self.view.addSubview(check)
         
 
         NSLayoutConstraint.activate([
@@ -185,8 +199,13 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
             
             sublabel.topAnchor.constraint(equalTo: modalView.topAnchor, constant: 109),
             sublabel.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 36),
-            sublabel.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -111),
-            sublabel.bottomAnchor.constraint(equalTo: modalView.bottomAnchor, constant: -130),
+            sublabel.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -56),
+            sublabel.bottomAnchor.constraint(equalTo: modalView.bottomAnchor, constant: -120),
+            
+            check.topAnchor.constraint(equalTo: modalView.topAnchor, constant: 216),
+            check.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 36),
+            check.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -83),
+//            check.bottomAnchor.constraint(equalTo: modalView.bottomAnchor, constant: -120),
             
         ])
     }
@@ -200,7 +219,12 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
     }
     
     @objc func buttonClicked2(){
-
+//        StudentModalController
+        let vc = StudentController()
+        vc.modalTransitionStyle = .coverVertical // 아래에서 위로 (기존)
+        vc.modalPresentationStyle = .formSheet // 자동으로
+        
+        self.present(vc,animated: true)
         print("버튼 확인")
     }
 
@@ -234,6 +258,10 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
             // Update the image for the page
             if let image = UIImage(named: imgaeTextpage[page]) {
                 imageView.image = image
+            }
+            
+            if let image = UIImage(named: positionPage[page]) {
+                check.image = image
             }
             
             button.removeTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
