@@ -26,6 +26,11 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
          "studentList"
      ]
     
+    let positionPage: [String] = [
+         "post",
+         "list"
+     ]
+    
     lazy var pageControl: UIPageControl = {
         // Create a UIPageControl.
         let pageControl = UIPageControl(frame: CGRect(x: 0, y: self.view.frame.maxY - 100, width: self.view.frame.maxX, height:50))
@@ -108,6 +113,14 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
         label.font = UIFont(name: "Pretendard-Regular", size: 15)
         return label
     }()
+    
+    let check: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "post")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,6 +173,7 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
         
         self.view.addSubview(boldlabel)
         self.view.addSubview(sublabel)
+        self.view.addSubview(check)
         
 
         NSLayoutConstraint.activate([
@@ -187,6 +201,11 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
             sublabel.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 36),
             sublabel.trailingAnchor.constraint(equalTo: modalView.trailingAnchor, constant: -56),
             sublabel.bottomAnchor.constraint(equalTo: modalView.bottomAnchor, constant: -120),
+            
+            check.topAnchor.constraint(equalTo: modalView.topAnchor, constant: 216),
+            check.leadingAnchor.constraint(equalTo: modalView.leadingAnchor, constant: 36),
+            check.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -83),
+//            check.bottomAnchor.constraint(equalTo: modalView.bottomAnchor, constant: -120),
             
         ])
     }
@@ -239,6 +258,10 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
             // Update the image for the page
             if let image = UIImage(named: imgaeTextpage[page]) {
                 imageView.image = image
+            }
+            
+            if let image = UIImage(named: positionPage[page]) {
+                check.image = image
             }
             
             button.removeTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
