@@ -1,18 +1,23 @@
-//
-//  StudentController.swift
-//  Shortkathon
-//
-//  Created by 이유현 on 11/16/24.
-//
 
 import Foundation
 import UIKit
 
 class StudentController: UIViewController {
     
+    let tableViewUI: UITableView = {
+        let tableVIew = UITableView()
+        tableVIew.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+        tableVIew.translatesAutoresizingMaskIntoConstraints = false
+        return tableVIew
+    }()
+    
     override func viewDidLoad() {
         view.backgroundColor = .white
         super.viewDidLoad()
+        
+        tableViewUI.dataSource = self
+        tableViewUI.delegate = self
+        
         setUI()
     }
     
@@ -34,19 +39,21 @@ class StudentController: UIViewController {
             return button
         }()
         
-        view.addSubview(contentView)
-        contentView.addSubview(button)
+        view.addSubview(tableViewUI)
+        view.addSubview(button)
+        
+        tableViewUI.register(StudentTableCell.self, forCellReuseIdentifier: "studentTableCell")
         
         NSLayoutConstraint.activate([
             
-            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableViewUI.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableViewUI.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableViewUI.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableViewUI.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            // Button 제약 조건: 화면 중앙에 배치
-            button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+//             Button 제약 조건: 화면 중앙에 배치
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             button.widthAnchor.constraint(equalToConstant: 150),
             button.heightAnchor.constraint(equalToConstant: 50)
             
@@ -55,6 +62,7 @@ class StudentController: UIViewController {
         ])
         
     }
+    
     
     @objc func buttonClicked(){
         let vc = StudentModalController()
@@ -76,4 +84,55 @@ class StudentController: UIViewController {
     
 }
 
+extension StudentController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return MockData.modeling.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "studentTableCell", for: indexPath) as? StudentTableCell else {
+            return UITableViewCell()
+        }
+        
+        let data = MockData.modeling[indexPath.row]
+        cell.title.text = data.title
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100.0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 70.0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        headerView.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+    
+        let headerTitle = UILabel()
+        headerTitle.translatesAutoresizingMaskIntoConstraints = false
+        headerTitle.text = "Section \(section)"
+        headerTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        headerTitle.textColor = .white
+    
+        headerView.addSubview(headerTitle)
+    
+        NSLayoutConstraint.activate([
+            headerTitle.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 0),
+            headerTitle.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 8),
+            headerTitle.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -8),
+            headerTitle.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0)
+        ])
+    
+        return headerView
+    }
+}
 
