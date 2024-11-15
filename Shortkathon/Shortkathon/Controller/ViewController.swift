@@ -73,7 +73,7 @@ class ViewController: UIViewController {
     }
 
     @objc func showStudentController() {
-        let studentController = StudentController()
+        let studentController = StudentSwipePostController()
         studentController.modalPresentationStyle = .fullScreen
         self.present(studentController, animated: true, completion: nil)
     }
