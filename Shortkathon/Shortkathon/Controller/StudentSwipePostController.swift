@@ -8,7 +8,7 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
     
     let pageTexts: [String] = [
          "메시지 전송",
-         "보낸 메시지 확인"
+         "보낸 메시지"
      ]
     
     let subpageText: [String] = [
