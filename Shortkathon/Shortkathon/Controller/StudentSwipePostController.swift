@@ -162,9 +162,22 @@ class StudentSwipePostController : UIViewController , UIScrollViewDelegate {
             let modalView = UIView()
             modalView.translatesAutoresizingMaskIntoConstraints = false
             modalView.backgroundColor = .white
-            modalView.layer.cornerRadius = 40.0  // Round the corners
+            modalView.isUserInteractionEnabled = false //스와이프 인식 충돌 해결
+
+            // 상단 코너만 둥글게 설정
+            let cornerRadius: CGFloat = 40.0
+            let maskPath = UIBezierPath(
+                roundedRect: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 286),
+                byRoundingCorners: [.topLeft, .topRight], // 상단 코너만 라운딩
+                cornerRadii: CGSize(width: cornerRadius, height: cornerRadius)
+            )
+            let shape = CAShapeLayer()
+            shape.path = maskPath.cgPath
+            modalView.layer.mask = shape
+
             return modalView
         }()
+
 
         
         self.view.addSubview(modalView)
